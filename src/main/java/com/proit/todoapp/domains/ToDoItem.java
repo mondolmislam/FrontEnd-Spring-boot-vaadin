@@ -2,10 +2,14 @@ package com.proit.todoapp.domains;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotEmpty;
+
 public class ToDoItem {
 
 	private String id;
+	@NotEmpty
 	private String name;
+	@NotEmpty
 	private String description;
 	private Date createdAt;
 	private Date updatedAt;
