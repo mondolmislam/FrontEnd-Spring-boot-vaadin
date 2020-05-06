@@ -1,8 +1,5 @@
 package com.proit.todoapp.pages;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,7 +45,7 @@ public class EditItemForm extends VerticalLayout implements HasUrlParameter<Stri
 		Button save = new Button("Save");
 		save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		save.addClickListener(event -> {
-			ResponseEntity<List<ToDoItem>> response= (ResponseEntity<List<ToDoItem>>) reqeustHandler.createRequest(BackendUrl.BASE_URL+BackendUrl.TODO+"/"+item.getId(), item, HttpMethod.PUT);
+			ResponseEntity<ToDoItem> response= reqeustHandler.createRequest(BackendUrl.BASE_URL+BackendUrl.TODO+"/"+item.getId(), item, HttpMethod.PUT);
 			if (response.getStatusCode().equals(HttpStatus.OK)) {		
 				new Notification("Successfully Updated", 3000).open();
 				UI.getCurrent().navigate(MainView.class);
@@ -69,16 +66,15 @@ public class EditItemForm extends VerticalLayout implements HasUrlParameter<Stri
 	
 	@Override
 	public void setParameter(BeforeEvent event, @WildcardParameter String pathValue) {
-		List<ToDoItem> items=new ArrayList<>();
-		ResponseEntity<List<ToDoItem>> response= (ResponseEntity<List<ToDoItem>>) reqeustHandler.createRequest(BackendUrl.BASE_URL+BackendUrl.TODO+"/"+pathValue, null, HttpMethod.GET);
-		
+		ToDoItem item=new ToDoItem();
+		ResponseEntity<ToDoItem> response= reqeustHandler.createRequest(BackendUrl.BASE_URL+BackendUrl.TODO+"/"+pathValue, null, HttpMethod.GET);
 		ObjectMapper mapper = new ObjectMapper();
-		items= mapper.convertValue(
+		item= mapper.convertValue(
 		    response.getBody(), 
-		    new TypeReference<List<ToDoItem>>(){}
+		    new TypeReference<ToDoItem>(){}
 		);
 		id.setValue(pathValue);
-		name.setValue(items.get(0).getName());
-		description.setValue(items.get(0).getDescription());
+		name.setValue(item.getName());
+		description.setValue(item.getDescription());
 	}	
 }

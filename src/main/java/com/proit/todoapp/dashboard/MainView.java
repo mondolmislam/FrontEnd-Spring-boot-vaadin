@@ -10,6 +10,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.proit.todoapp.constants.BackendUrl;
 import com.proit.todoapp.domains.ToDoItem;
+import com.proit.todoapp.domains.ToDoItemResponse;
 import com.proit.todoapp.pages.AddItemForm;
 import com.proit.todoapp.request.RequestHandler;
 import com.proit.todoapp.request.RequestHandlerImpl;
@@ -26,18 +27,20 @@ import com.vaadin.flow.router.Route;
 @Route
 public class MainView extends VerticalLayout{
 	private static final long serialVersionUID = 1L;
-
-	private RequestHandler<ToDoItem> reqeustHandler=new RequestHandlerImpl<ToDoItem>();
+	private RequestHandler<ToDoItemResponse> requestHandler=new RequestHandlerImpl<ToDoItemResponse>();
 	
 	public MainView() {
-		List<ToDoItem> items=new ArrayList<>();		
-		ResponseEntity<List<ToDoItem>> response= (ResponseEntity<List<ToDoItem>>) reqeustHandler.createRequest(BackendUrl.BASE_URL+BackendUrl.TODO, null, HttpMethod.GET);
+		List<ToDoItem> items=new ArrayList<>();	
+		
+		ResponseEntity<ToDoItemResponse> response= requestHandler.createRequest(BackendUrl.BASE_URL+BackendUrl.TODO, null, HttpMethod.GET);
 		
 		ObjectMapper mapper = new ObjectMapper();
-		items= mapper.convertValue(
+		ToDoItemResponse toDoItemResponse=new ToDoItemResponse();
+		toDoItemResponse= mapper.convertValue(
 		    response.getBody(), 
-		    new TypeReference<List<ToDoItem>>(){}
-		);		
+		    new TypeReference<ToDoItemResponse>(){}
+		);
+		items=toDoItemResponse.getToDoItems();
 		
 		Button add = new Button("Add");
 		add.addClickListener(listener->{

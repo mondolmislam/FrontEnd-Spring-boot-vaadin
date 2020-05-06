@@ -1,7 +1,5 @@
 package com.proit.todoapp.pages;
 
-import java.util.List;
-
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +38,7 @@ public class AddItemForm extends VerticalLayout {
 		Button save = new Button("Save");
 		save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		save.addClickListener(event -> {
-			ResponseEntity<List<ToDoItem>> response= (ResponseEntity<List<ToDoItem>>) reqeustHandler.createRequest(BackendUrl.BASE_URL+BackendUrl.TODO, item, HttpMethod.POST);
+			ResponseEntity<ToDoItem> response= reqeustHandler.createRequest(BackendUrl.BASE_URL+BackendUrl.TODO, item, HttpMethod.POST);
 			if (response.getStatusCode().equals(HttpStatus.CREATED)) {		
 				new Notification("Successfully Save!!!", 3000).open();
 				UI.getCurrent().navigate(MainView.class);
